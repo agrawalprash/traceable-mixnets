@@ -1,0 +1,53 @@
+COMPUTATION:
+n=10000
+treedepth=14
+hashfunc=poseidon
+Written build/sm.zok
+Time fastcreate_elems_rands_comms: 0.8000392619287595 sec
+Time __init__: 33.78100999107119 sec
+Time get_auth_path: 6.80901575833559e-06 sec
+init content is 16731219936878191282060731643304155479300644538317751753267868031192965706747
+init nodeval is 20429827674531012084908661285294021502225929130088378927138813497326768607443
+Time check_auth_path: 0.015433527994900942 sec
+root hash: 17025404099172344796708767934460757606809027097861939030731467054279504986282
+Written build/zok.inp
+
+real	0m34.635s
+user	0m34.626s
+sys	0m0.008s
+
+TRUSTED SETUP:
+Compiling build/sm.zok
+
+Compiled code written to 'build/circuit'
+Number of constraints: 35091
+Performing setup...
+WARNING: You are using the G16 scheme which is subject to malleability. See zokrates.github.io/toolbox/proving_schemes.html#g16-malleability for implications.
+Verification key written to 'build/verification.key'
+Proving key written to 'build/proving.key'
+Setup completed
+
+real	0m7.220s
+user	0m6.848s
+sys	0m0.372s
+
+PROVER:
+Computing witness...
+GvHr is ["4681156876253904663111722712745674104973673662666645222051404972481383516550","13566756774153114851769837549739796605187846773314253814100183341167953133789"]:
+nodeval is "17025404099172344796708767934460757606809027097861939030731467054279504986282":
+Witness file written to 'build/witness'
+Generating proof...
+WARNING: You are using the G16 scheme which is subject to malleability. See zokrates.github.io/toolbox/proving_schemes.html#g16-malleability for implications.
+Proof written to 'build/proof.json'
+
+real	0m2.178s
+user	0m2.130s
+sys	0m0.048s
+
+VERIFIER:
+Performing verification...
+PASSED
+
+real	0m0.005s
+user	0m0.003s
+sys	0m0.002s

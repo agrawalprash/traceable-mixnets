@@ -1,0 +1,40 @@
+import "hashes/sha256/512bitPadded" as sha256;
+import "ecc/edwardsAdd" as add;
+import "ecc/edwardsScalarMult" as multiply;
+import "utils/pack/bool/nonStrictUnpack256" as unpack256bool;
+import "utils/pack/u32/nonStrictUnpack256" as unpack256u32;
+from "ecc/babyjubjubParams" import BabyJubJubParams;
+
+struct merklepath<DEPTH> {
+    u32[DEPTH][8] valsibling;
+    bool[DEPTH] dirsibling;
+}
+
+const u32 DEPTH = __DEPTH__;  // to be replaced by the templating engine
+
+def main(field[2] Comm, field[2] H, u32[8] rootval, BabyJubJubParams context, private field v, private field r, private merklepath<DEPTH> path) {
+    bool[256] vbits = unpack256bool(v);
+    bool[256] rbits = unpack256bool(r);
+
+    field[2] G = [context.Gu, context.Gv];
+    field[2] Gv = multiply(vbits, G, context);
+    field[2] Hr = multiply(rbits, H, context);
+    field[2] GvHr = add(Gv, Hr, context);
+    log("GvHr is {}:", GvHr);  
+    assert(Comm[0] == GvHr[0] && Comm[1] == GvHr[1]);
+    
+    u32[8] v_u32arr = unpack256u32(v);
+    u32[8] zeros = [0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000];
+    u32[8] mut nodeval = sha256(zeros, v_u32arr);
+    for u32 i in 0..DEPTH {
+        nodeval = if path.dirsibling[i] { 
+            sha256(nodeval, path.valsibling[i]) 
+        } else { 
+            sha256(path.valsibling[i], nodeval) 
+        };
+    }
+    log("nodeval is {}:", nodeval);
+    assert(nodeval == rootval); 
+
+    return;
+}

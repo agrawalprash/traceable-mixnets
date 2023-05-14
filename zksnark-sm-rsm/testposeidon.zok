@@ -1,0 +1,7 @@
+import "hashes/poseidon/poseidon" as poseidon;
+
+def main(field[2] v) {
+    field h = poseidon(v);
+    log("poseidon({}, {}) is {}", v[0], v[1], h); 
+    return;
+}

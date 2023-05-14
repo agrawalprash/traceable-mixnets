@@ -1,0 +1,38 @@
+import "hashes/poseidon/poseidon" as poseidon;
+import "ecc/edwardsAdd" as add;
+import "ecc/edwardsScalarMult" as multiply;
+import "utils/pack/bool/nonStrictUnpack256" as unpack256bool;
+from "ecc/babyjubjubParams" import BabyJubJubParams;
+
+struct merklepath<DEPTH> {
+    field[DEPTH] valsibling;
+    bool[DEPTH] dirsibling;
+}
+
+const u32 DEPTH = __DEPTH__;  // to be replaced by the templating engine
+
+def main(field[2] Comm, field[2] H, field rootval, BabyJubJubParams context, private field v, private field r, private merklepath<DEPTH> path) {
+    bool[256] vbits = unpack256bool(v);
+    bool[256] rbits = unpack256bool(r);
+
+    field[2] G = [context.Gu, context.Gv];
+    field[2] Gv = multiply(vbits, G, context);
+    field[2] Hr = multiply(rbits, H, context);
+    field[2] GvHr = add(Gv, Hr, context);
+    log("GvHr is {}:", GvHr);  
+    assert(Comm[0] == GvHr[0] && Comm[1] == GvHr[1]);
+    
+    field zero = 0;
+    field mut nodeval = poseidon([zero, v]);
+    for u32 i in 0..DEPTH {
+        nodeval = if path.dirsibling[i] { 
+            poseidon([nodeval, path.valsibling[i]]) 
+        } else { 
+            poseidon([path.valsibling[i], nodeval]) 
+        };
+    }
+    log("nodeval is {}:", nodeval);
+    assert(nodeval == rootval); 
+
+    return;
+}

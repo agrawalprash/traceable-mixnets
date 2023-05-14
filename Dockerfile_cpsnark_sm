@@ -1,0 +1,26 @@
+FROM ubuntu:latest
+
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+                bison \
+                curl  \
+                flex \
+                ca-certificates \
+                build-essential \
+                python3-pip \
+        && rm -rf /var/lib/apt/lists/*
+
+
+# copy the project code
+COPY cpsnark-sm /app/cpsnark-sm
+
+# set work directory
+WORKDIR /app/cpsnark-sm
+
+# for cpSNARKs
+# Get Rust
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+# Add .cargo/bin to PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN cargo build

@@ -1,0 +1,23 @@
+FROM --platform=linux/amd64 ubuntu:latest
+
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+                bison \
+                curl  \
+                flex \
+                ca-certificates \
+                python3-pip \
+        && rm -rf /var/lib/apt/lists/*
+
+# copy the project code
+COPY zksnark-sm-rsm /app/zksnark-sm-rsm
+
+# set work directory
+WORKDIR /app/zksnark-sm-rsm
+RUN chmod +x *.sh
+
+# for zkSNARKs
+RUN curl -LSfs get.zokrat.es | sh
+RUN PATH="/root/.zokrates/bin:${PATH}"
+RUN pip3 install bitstring
