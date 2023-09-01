@@ -1,6 +1,7 @@
 Requirement: Docker (https://www.docker.com) (note that the benchmarks have been tested on Intel x86 chips and may not work on Apple ARM chips)
 
 A) To benchmark the DB-SM and DB-RSM protocols of our traceable mixnet construction, follow these steps:
+        
         #1. Create the docker container from the given docker file:
         docker build -f Dockerfile_db_sm_rsm -t db-sm-rsm .
 
@@ -21,6 +22,7 @@ We also provide a report from a sample run of DB-SM and DB-RSM protocols for n=1
 ##################################################################################################
 
 B) To benchmark zksnarks-based set membership and reverse set membership proofs (in the single-prover setting), follow these steps:
+        
         #1. Create the docker container from the given docker file:
         docker build -f Dockerfile_zksnark_sm_rsm -t zksnark-sm-rsm .
 
@@ -52,6 +54,7 @@ Sample reports using the Poseidon hash function are available at:
 ##################################################################################################
 
 C) To benchmark cpsnark (Benarroch et al's scheme) for set membership (in the single-prover setting), follow these steps:
+        
         #1. Create the docker container from the given docker file (note that this might take upwards of 600 seconds):
         docker build -f Dockerfile_cpsnark_sm -t cpsnark-sm .
 
