@@ -1,5 +1,7 @@
 Requirement: Docker (https://www.docker.com) (note that the benchmarks have been tested on Intel x86 chips and may not work on Apple ARM chips)
 
+Note: If you want to download this entire directory and test on your local system, please download the zip file traceable-mixnets.zip.
+
 A) To benchmark the DB-SM and DB-RSM protocols of our traceable mixnet construction, follow these steps:
         
         #1. Create the docker container from the given docker file:
