@@ -1,11 +1,5 @@
 use accumulator::group::Rsa2048;
 use accumulator::{group::Group, AccumulatorWithoutHashToPrime};
-// use algebra::{
-//     bls12_381::{Bls12_381, Fr, G1Projective},
-//     PrimeField,
-// };
-
-
 use ark_ff::PrimeField;
 use ark_bls12_381::{Bls12_381, Fr, G1Projective};
 
@@ -152,6 +146,31 @@ pub fn criterion_benchmark(c: &mut Criterion) {
             let mut prover_channel =
                 TranscriptProverChannel::new(&protocol.crs, &verification_transcript, &proof);
             protocol.verify(&mut prover_channel, &statement).unwrap();
+        })
+    });
+
+    // Create an array of values against which the membership witness is computed. Note:
+    // 1. Although ideally each of these values should be distinct, the accumulation process in the following benchmark doesn't care 
+    //    and proceeds the same way by computing G^prod where prod is a product of each element in value_arr, so we repeat the same 
+    //    element to keep things simple.  
+    // 2. We also ignore the cost to hash set elements to prime numbers, because presumably this could be done ahead of time for each
+    //    element. Thus, we make it so that our set elements are already prime numbers.
+    let prime_arr = vec![LARGE_PRIMES[0].clone(); 10000];
+    
+    c.bench_function("membership_hash creating witness", |b| {
+        b.iter(|| {
+            // Witness creation follows exactly the same process as accumulator creation of computing G^prod, but  
+            // prod denotes the product of all elements except the element whose witness is being computed. We simulate 
+            // this by skipping the first element from value_arr.
+            let accum = accumulator::Accumulator::<Rsa2048, Integer, AccumulatorWithoutHashToPrime>::empty();
+            let accum = accum.add(
+                &prime_arr
+                    .iter()
+                    .skip(1)
+                    .map(|p| Integer::from(*p))
+                    .collect::<Vec<_>>(),
+            );
+            let _witness = accumulator::Witness::<Rsa2048, Integer, AccumulatorWithoutHashToPrime>(accum);
         })
     });
 }

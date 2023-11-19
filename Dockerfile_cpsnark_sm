@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 python3-pip \
         && rm -rf /var/lib/apt/lists/*
 
+# Get Rust
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 # copy the project code
 COPY cpsnark-sm /app/cpsnark-sm
@@ -18,9 +21,5 @@ COPY cpsnark-sm /app/cpsnark-sm
 # set work directory
 WORKDIR /app/cpsnark-sm
 
-# for cpSNARKs
-# Get Rust
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
-# Add .cargo/bin to PATH
-ENV PATH="/root/.cargo/bin:${PATH}"
 RUN cargo build
+RUN cargo bench --bench membership_hash

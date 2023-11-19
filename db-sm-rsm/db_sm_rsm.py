@@ -291,14 +291,13 @@ def get_blsigs_rev(enc_sigs_rev, enc_rands, ck, ck_fo, permcomm, alpha, auth_elg
     enc_sigs_S, enc_sigs_c, enc_sigs_rhat = enc_sigs_rev
     myn = len(enc_sigs_S)
 
-    # Homomorphically obtain the r component of the BBS+ signature
-    with timer("homomorphically obtain the r component of BBS+ signatures", report_subtimers=mixers):
+    # Re-encrypt and permute signatures
+    with timer("re-encrypt and permute BBS+ signatures", report_subtimers=mixers):
+        # Homomorphically obtain the r component of the BBS+ signature
         for a in range(alpha):
             with timer("mixer %d: homomorphically obtain the r component of BBS+ sig" % a):
                 enc_sigs_r = [pai_add(auth_paipk, enc_sigs_rhat[i], enc_rands[i]) for i in range(myn)]
 
-    # Re-encrypt and permute signatures
-    with timer("re-encrypt and permute BBS+ signatures", report_subtimers=mixers):
         status_shuffle_blsigs_rev = True
         evec_S, evec_c, evec_r = [], [], []
         enc_sigs_S_1, enc_sigs_S_2, enc_sigs_c_1, enc_sigs_c_2, enc_sigs_r_1, enc_sigs_r_2 = [], [], [], [], [], []

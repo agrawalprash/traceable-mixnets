@@ -2,7 +2,7 @@ $ cargo bench --bench membership_hash
     Finished bench [optimized] target(s) in 0.06s
 warning: the following packages contain code that will be rejected by a future version of Rust: criterion v0.3.4
 note: to see what the problems were, use the option `--future-incompat-report`, or run `cargo report future-incompatibilities --id 1`
-     Running benches/membership_hash.rs (target/release/deps/membership_hash-02236295ae00ded9)
+     Running benches/membership_hash.rs (target/release/deps/membership_hash-3a2eac78eb554c7e)
 WARNING: HTML report generation will become a non-default optional feature in Criterion.rs 0.4.0.
 This feature is being moved to cargo-criterion (https://github.com/bheisler/cargo-criterion) and will be optional in a future version of Criterion.rs. To silence this warning, either switch to cargo-criterion or enable the 'html_reports' feature in your Cargo.toml.
 
@@ -10,15 +10,29 @@ Gnuplot not found, using plotters backend
 params: Parameters(𝜆=127 (security level), 𝜆_s=124 (soundness security), 𝜆_z=125 (zero-knowledge security), μ=252 (hash-to-prime/range bits), ν=255 (field size bits)
 crs size: (1072, 6852096)
 Benchmarking membership_hash protocol proving: Warming up for 3.0000 s
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 21.9s, or reduce sample count to 20.
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 22.4s, or reduce sample count to 20.
 membership_hash protocol proving                                                                            
-                        time:   [221.03 ms 221.67 ms 222.23 ms]
-Found 13 outliers among 100 measurements (13.00%)
-  1 (1.00%) low severe
-  12 (12.00%) low mild
+                        time:   [224.50 ms 225.77 ms 227.38 ms]
+                        change: [-4.5767% -3.5957% -2.5781%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low mild
+  5 (5.00%) high mild
+  2 (2.00%) high severe
 
 membership_hash protocol verification                                                                            
-                        time:   [29.693 ms 29.725 ms 29.759 ms]
-Found 2 outliers among 100 measurements (2.00%)
-  2 (2.00%) high mild
+                        time:   [31.854 ms 31.930 ms 32.011 ms]
+                        change: [+2.1202% +2.3967% +2.7056%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 17 outliers among 100 measurements (17.00%)
+  11 (11.00%) low mild
+  3 (3.00%) high mild
+  3 (3.00%) high severe
+
+Benchmarking membership_hash creating witness: Warming up for 3.0000 s
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 78.3s, or reduce sample count to 10.
+membership_hash creating witness                                                                            
+                        time:   [782.95 ms 783.71 ms 784.46 ms]
+                        change: [-0.6599% -0.5599% -0.4625%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
 

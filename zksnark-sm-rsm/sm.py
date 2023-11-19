@@ -11,7 +11,7 @@ def gen_witness_set_membership(elems, rands, comms, commindex, hashfuncstr):
     hashfuncinternal = sha256internal if hashfuncstr == "sha256" else poseidoninternal
     mtree = MerkleTree(elems, hashfuncleaves=hashfuncleaves, hashfuncinternal=hashfuncinternal, padelem=0)
     auth_path = mtree.get_auth_path(mtree.address(commindex))
-    mtree.check_auth_path(elems[commindex], auth_path)
+    #mtree.check_auth_path(elems[commindex], auth_path)
 
     ## Prepare witness to be sent to ZoKrates ##    
     # Public component

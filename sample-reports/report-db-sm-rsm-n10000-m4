@@ -216,17 +216,11 @@
          check_verfsigs_rev time: 110 s
          status_verfsigs_rev: True
          get_blsigs_rev
-             homomorphically obtain the r component of BBS+ signatures
+             re-encrypt and permute BBS+ signatures
                  mixer 0: homomorphically obtain the r component of BBS+ sig time: 0.05 s
                  mixer 1: homomorphically obtain the r component of BBS+ sig time: 0.05 s
                  mixer 2: homomorphically obtain the r component of BBS+ sig time: 0.051 s
                  mixer 3: homomorphically obtain the r component of BBS+ sig time: 0.05 s
-                 mixer 0 total time: 0.05 s
-                 mixer 1 total time: 0.05 s
-                 mixer 2 total time: 0.051 s
-                 mixer 3 total time: 0.05 s
-             homomorphically obtain the r component of BBS+ signatures time: 0.2 s
-             re-encrypt and permute BBS+ signatures
                  mixer 0: reencrypting encrypted BBS+ signatures time: 17 s
                  mixer 0: creating proof of shuffle of encrypted BBS+ signatures time: 89 s
                  mixer 1: reencrypting encrypted BBS+ signatures time: 18 s
@@ -351,7 +345,7 @@
          mixer 3 total time: 2400 s
          verifier total time: 660 s
      reverse set membership time: 10000 s
-     size of sender-uploaded input ciphertexts: 49.811601638793945 MB
+     size of sender-uploaded input ciphertexts: 200.26922225952148 MB
      size of verifier-uploaded BB signatures: 0.30517578125 MB
      size of DPK_BBsig proofs: 3.8433074951171875 MB
      size of verifier-uploaded BBS+ signatures: 0.896453857421875 MB

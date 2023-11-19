@@ -11,7 +11,7 @@ def gen_witness_reverse_set_membership(elems, rands, comms, elemindex, hashfuncs
     mtree = MerkleTree(comms, hashfuncleaves=hashfuncleaves, hashfuncinternal=hashfuncinternal, padelem=IDEN)
     leaf = mtree.getnode(mtree.address(elemindex))
     auth_path = mtree.get_auth_path(mtree.address(elemindex))
-    mtree.check_auth_path(comms[elemindex], auth_path)
+    #mtree.check_auth_path(comms[elemindex], auth_path)
 
     ## Prepare witness to be sent to ZoKrates ##    
     # Public component

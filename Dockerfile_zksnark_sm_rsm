@@ -10,6 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
                 python3-pip \
         && rm -rf /var/lib/apt/lists/*
 
+# for zkSNARKs
+RUN curl -LSfs get.zokrat.es | sh
+ENV PATH "/root/.zokrates/bin:${PATH}"
+RUN pip3 install bitstring
+
 # copy the project code
 COPY zksnark-sm-rsm /app/zksnark-sm-rsm
 
@@ -17,7 +22,4 @@ COPY zksnark-sm-rsm /app/zksnark-sm-rsm
 WORKDIR /app/zksnark-sm-rsm
 RUN chmod +x *.sh
 
-# for zkSNARKs
-RUN curl -LSfs get.zokrat.es | sh
-RUN PATH="/root/.zokrates/bin:${PATH}"
-RUN pip3 install bitstring
+

@@ -1,7 +1,15 @@
 CPSNARKs-Set
 ------------
 
-#### NOTE: This directory is a clone of https://github.com/kobigurk/cpsnarks-set/ with minor import fixes. ########
+## Note
+
+This directory contains the [official implementation](https://github.com/kobigurk/cpsnarks-set/tree/f8c7db66b7519b91dcda16caee6cb84949e8911b) of Benarroch et al.'s cpSNARK-Set scheme [Zero-Knowledge Proofs for Set Membership: Efficient, Succinct, Modular](https://eprint.iacr.org/2019/1255.pdf), with the following minor bugfixes:
+* Imports ```algebra::bls12_381``` have been replaced with ```ark_bls12_381``` and ```algebra::PrimeField``` have been replaced with ``ark_ff::PrimeField``.
+* Dependency num-bigint in Cargo.lock has been upgraded from v0.3.2 to v0.3.3 to fix [this issue](https://github.com/rust-num/num-bigint/pull/219) (see [release notes for v0.3.3](https://github.com/rust-num/num-bigint/blob/num-bigint-0.3.3/RELEASES.md)).
+
+In addition, we have added an additional benchmark under ```benches/membership_hash``` to compute the cost of creating a membership witness. This was not included in the original benchmark and we add it since this would count towards the prover time in a set membership proof.
+
+The original project's README now follows.
 
 ## Overview
 
