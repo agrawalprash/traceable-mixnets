@@ -414,10 +414,12 @@ def get_blsigs_rev(enc_sigs_rev, enc_rands, ck, ck_fo, permcomm, alpha, auth_elg
         pprint("status_decshares_blsigs_rev", status_decshares_blsigs_rev)
 
     return (blsigs_S, blsigs_c, blsigs_r), (_blshares_S, _blshares_c, _blshares_r) 
+    
 
 def main(n, alpha):
     """ Main benchmarking code for processing and proving forward and reverse set membership 
-    for n messages with alpha authorities. """
+    for `n` messages with `alpha` mix-servers (note: we denote the number of mix-servers by `alpha` 
+    instead of `m` in the code). """
 
     pprint("number of entries:", n)
     pprint("number of mix-servers:", alpha)
