@@ -1,14 +1,10 @@
-# README
+# Benchmarks for Traceable Mixnets
 
-This repository includes the following items: 
+This repository includes benchmarks for the PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
 
-- Source code for our implementation of the distributed zero-knowledge proofs (ZKPs) of set membership and reverse set membership (DB-SM and DB-RSM) shown respectively in Figures 8 and 9 of our traceable mixnets paper. These ZKPs form the core building blocks of our traceable mixnet construction shown in Figure 6. 
-- Source code for a zkSNARK implementation for set membership and reverse set membership in the single prover setting using Merkle accumulators. This is included to indirectly estimate the time required in producing distributed set membership and reverse set membership proofs via collaborative zkSNARKs [1] (Section 6.2 - para 2-3). In a collaborative zkSNARK, a set of provers each holding a share of the NP witness jointly prove knowledge of the witness. As per [1], a collaborative zkSNARK incurs a per-prover time that is roughly double the time taken by the corresponding single-prover zkSNARK. This thumbrule allows us to estimate the performance in a collaborative zkSNARK by implementing only a single-prover zkSNARK.
-- Source code for the [official implementation](https://github.com/kobigurk/cpsnarks-set/tree/f8c7db66b7519b91dcda16caee6cb84949e8911b) of Benarroch et al.'s cpSNARK-Set [2] for set membership, with some minor changes (Section 6.2 - para 4). The cpSNARK-Set approach avoids the expensive hash computations inherent in a zkSNARK+Merkle accumulator based proof, but it works only for set membership and not reverse set membership. It also works only in the single-prover setting.
-
-### Security/Privacy Issues and Ethical Concerns
-
-For simplicity, our instructions below are written such that Docker needs to be run as a superuser. To mitigate potential vulnerabilities in the Docker daemon and the container runtime, Docker should be run in the rootless mode by following the instructions [here](https://docs.docker.com/engine/security/rootless/). 
+- Source code for our implementation of the distributed zero-knowledge proofs (ZKPs) of set membership and reverse set membership (DB-SM and DB-RSM) shown respectively in Figures 8 and 9 of our paper. These ZKPs form the core building blocks of our traceable mixnet construction shown in Figure 7. 
+- Source code for a zkSNARK implementation for set membership and reverse set membership in the single prover setting using Merkle accumulators. This is included to indirectly estimate the time required in producing distributed set membership and reverse set membership proofs via collaborative zkSNARKs [1]. In a collaborative zkSNARK, a set of provers each holding a share of the NP witness jointly prove knowledge of the witness. As per [1], a collaborative zkSNARK incurs a per-prover time that is roughly double the time taken by the corresponding single-prover zkSNARK. This thumbrule allows us to estimate the performance in a collaborative zkSNARK by implementing only a single-prover zkSNARK.
+- Source code for the [official implementation](https://github.com/kobigurk/cpsnarks-set/tree/f8c7db66b7519b91dcda16caee6cb84949e8911b) of Benarroch et al.'s cpSNARK-Set [2] for set membership, with some minor changes. The cpSNARK-Set approach avoids the expensive hash computations inherent in a zkSNARK+Merkle accumulator based proof, but it works only for set membership and not reverse set membership. It also works only in the single-prover setting.
 
 ## Basic Requirements
 
@@ -27,14 +23,6 @@ The expected overall time for all our experiments (experiments 1-3) is about 5 h
 ## Environment
 
 ### Accessibility
-
-The artifact source code is hosted on GitHub and can be fetched as follows:
-
-```bash
-git clone https://github.com/agrawalprash/traceable-mixnets.git
-cd traceable-mixnets
-git checkout 26a6a12
-```
 
 The git tree contains source code for our DB-SM and DB-RSM proofs under directory `db-sm-rsm`, source code for the zkSNARK-based set membership and reverse set membership proofs under directory `zksnark-sm-rsm`, and source code for the cpSNARK-Set based set membership proof under directory `cpsnark-sm`. In addition, it contains sample reports containing our experiment outputs on our test hardware setup under directory `sample-reports` and Dockerfiles for each of our experiments at the top-level. We use these Dockerfiles to build the following Docker images and publish them on [Docker Hub](https://hub.docker.com/):
 
@@ -88,15 +76,17 @@ The expected outcome is an output containing strings like `Finished bench [optim
 
 ## Artifact Evaluation
 
+We now provide instructions to reproduce the results mentioned in the paper. Our instructions and reported numbers are specifically for the case of $n=10^$ ciphertexts in the mixnet input list and $m=4$ mix-servers (see Figure 10 - column for $m=4$ and $n=10^4$ in the top table and detailed breakdown in the bottom table). Values for other settings can be similarly obtained. 
+
 ### Main Results and Claims
 
 #### Main Result 1: Our distributed set membership proof is faster than state-of-the-art collaborative zkSNARKs by ~86x 
 
-The per-prover time in our distributed set membership proof for $10000$ ciphertexts against a set of $10000$ plaintexts is $500$ seconds (Figure 11 row 1; supported by experiment 1), whereas the prover time in a single-prover set membership zkSNARK for $10000$ proofs is $21700$ seconds (Figure 11 row 2; supported by experiment 2). This allows us to estimate the corresponding per-prover time in a collaborative zkSNARK as $2\times 21700 = 43400$ seconds --- without including the time taken to generate and secret-share the SNARK witness among the provers in a collaborative zkSNARK --- which makes our approach conservatively $43400/500=86\times$ faster (Section 6.2 - para 3). Further, the estimated prover time in a single-prover cpSNARK-Set set membership proof is $2200$ seconds for $10000$ proofs --- without including the time taken to generate the membership witness (Section 6.2 - para 4; supported by experiment 3).
+The per-prover time in our distributed set membership proof for $10000$ ciphertexts against a set of $10000$ plaintexts is $500$ seconds (row "DB-SM - $M_k$"; supported by experiment 1), whereas the estimated per-prover time in a collaborative zkSNARK for $10000$ proofs is $43400$ seconds (row "collab-zkSNARK-SM"; supported by experiment 2). This makes our approach conservatively $43400/500=86\times$ faster than collaborative zkSNARKs (we do not count the time taken by collaborative zkSNARKs to generate and secret-share SNARK witnesses). Further, the estimated prover time in a single-prover cpSNARK-Set set membership proof is $2200$ seconds for $10000$ proofs --- without including the time taken to generate the membership witness (Section 6 - last para; supported by experiment 3).
 
 #### Main Result 2: Our distributed reverse set membership proof is faster than state-of-the-art collaborative zkSNARKs by ~18x
 
-The per-prover time in our distributed reverse set membership proof for $10000$ plaintexts against a set of $10000$ ciphertexts is $2400$ seconds (Figure 11 row 3; supported by experiment 1), whereas the prover time in a single-prover reverse set membership zkSNARK is $21700$ seconds (Figure 11 row 4; supported by experiment 2). This allows us to estimate the corresponding per-prover time in a collaborative zkSNARK as $2\times 21700 = 43400$ seconds similar to above, which makes our approach conservatively $43400/2400=18\times$ faster (Section 6.2 - para 3). The cpSNARK-Set approach of experiment 3 does not work for reverse set membership.
+The per-prover time in our distributed reverse set membership proof for $10000$ plaintexts against a set of $10000$ ciphertexts is $2400$ seconds (row "DB-RSM - $M_k$"; supported by experiment 1), whereas the estimated per-prover time in a collaborative zkSNARK for $10000$ proofs is $43400$ seconds (row "collab-zkSNARK-RSM"; supported by experiment 2). This makes our approach conservatively $43400/2400=18\times$ faster. The cpSNARK-Set approach of experiment 3 does not work for reverse set membership.
 
 *Note:* The specific times mentioned above are corresponding to our test hardware setup and sample reports, but the relative performance advantage of our approach is expected to remain consistent across different hardware configurations.
 
@@ -104,7 +94,7 @@ The per-prover time in our distributed reverse set membership proof for $10000$ 
 
 #### Experiment 1: Running our DB-SM and DB-RSM proofs
 
-*Experiment description:* The goal of this experiment is to estimate the runtime query performance of our $\mathsf{BTraceIn}$ and $\mathsf{BTraceOut}$ queries. Towards this end, we setup mixnet keys as per the $\mathsf{Keygen}$ protocol of Figure 6, create $n=10000$ ciphertexts as per the $\mathsf{Enc}$ algorithm, mix these ciphertexts as per the $\mathsf{Mix}$ protocol involving $m=4$ mix-servers, and then run $a)$ a worst-case DB-SM query with these mix-servers for all input ciphertexts against the set of all output plaintexts ($I=J=[n]$) and $b)$ a worst-case DB-RSM query for all output plaintexts against the set of all input ciphertexts ($I=J=[n]$). We also implement all the steps proposed in Appendix B to evaluate performance in the realistic malicious security model. As per Figure 6, the worst-case runtime performance for our $\mathsf{BTraceIn}$ and $\mathsf{BTraceOut}$ queries, without any additional optimizations, would be twice the performance of the DB-SM and DB-RSM queries respectively.
+*Experiment description:* The goal of this experiment is to estimate the runtime query performance of our $\mathsf{BTraceIn}$ and $\mathsf{BTraceOut}$ queries. Towards this end, we setup mixnet keys as per the $\mathsf{Keygen}$ protocol of Figure 7, create $n=10000$ ciphertexts as per the $\mathsf{Enc}$ algorithm, mix these ciphertexts as per the $\mathsf{Mix}$ protocol involving $m=4$ mix-servers, and then run $a)$ a worst-case DB-SM query with these mix-servers for all input ciphertexts against the set of all output plaintexts ($I=J=[n]$) and $b)$ a worst-case DB-RSM query for all output plaintexts against the set of all input ciphertexts ($I=J=[n]$). We also implement all the steps proposed in Appendix B to evaluate performance in the realistic malicious security model. As per Figure 7, the worst-case runtime performance for our $\mathsf{BTraceIn}$ and $\mathsf{BTraceOut}$ queries, without any additional optimizations, would be twice the performance of the DB-SM and DB-RSM queries respectively.
 
 *Running the experiment:*
 ```bash 
@@ -129,16 +119,17 @@ sudo docker container stop <container-id> # stop the container
 
 *Steps to verify the claimed results:*
 
-1. Verify that entry `forward set membership -> mixer X total time` matches the per-prover time in row 1 of Figure 11 (here and henceforth, assume `X` = 0, 1, 2 or 3). This verification directly supports main result 1. Verify that entry `forward set membership -> verifier time` matches the verifier time reported in row 1 of Figure 11. 
-2. Verify that entry `reverse set membership -> mixer X total time` matches the per-prover time in row 3 of Figure 11. This verification directly supports main result 2. Verify that entry `reverse set membership -> verifier time` matches the verifier time reported in row 3 of Figure 11. 
-3. Verify that entry `mixing -> mixer X total time` matches the mixing time reported in Figure 10. 
+1. Verify that entry `forward set membership -> mixer X total time` matches the per-prover time in the row titled "DB-SM - $M_k$" in the top table of Figure 10 (here and henceforth, assume `X` = 0, 1, 2 or 3). This verification directly supports main result 1. Verify that entry `forward set membership -> verifier time` matches the verifier time reported in the row titled "DB-SM - $Q$" of the same table. 
+2. Verify that entry `reverse set membership -> mixer X total time` matches the per-prover time in the row titled "DB-RSM - $M_k$". This verification directly supports main result 2. Verify that entry `reverse set membership -> verifier time` matches the verifier time reported in the row titled "DB-RSM - $Q$". 
+3. Verify that entry `mixing -> mixer X total time` matches the mixing time reported in Figure 10.
 4. Verify that the following entries in section `forward set membership` match the corresponding values reported in the DB-SM section of Figure 10: 
 
     | Entry in the experiment output | Entry in DB-SM section of Figure 10 |
     | ------------------------------ | ----------------------------------- |
     |`get_verfsigs -> verifier total time`  | $(Q)$ Generating $n$ BB signatures/encryptions |
     |`check_verfsigs -> mixer X total time` | $(M_k)$ Verifying $n$ BB signatures/encryptions | 
-    |`get_blsigs -> re-encrypt and reverse permute BB signatures -> mixer X total time` | $(M_k)$ Re-encryption+proof-of-shuffle of encrypted sigs | 
+    |`get_blsigs -> re-encrypt and reverse permute BB signatures -> reencrypting encrypted BB signatures time` | $(M_k)$ Re-encryption of encrypted signatures | 
+    |`get_blsigs -> re-encrypt and reverse permute BB signatures ->`  `creating proof of shuffle of encrypted BB signatures time` + `verifying others' proofs of shuffle of encrypted BB signatures time` | $(M_k)$ Proof-of-shuffle of encrypted signatures | 
     |`get_blsigs -> generate encrypted blinded BB signatures -> mixer X total time` | $(M_k)$ Homomorphic blinding of encrypted signatures |
     |`get_blsigs -> decrypt blinded signatures -> mixer X total time` | $(M_k)$ Threshold decryption of encrypted signatures |
     |`dpk_bbsig_nizkproofs -> mixer X total time`  | $(M_k)$ Generating $n$ DPK proofs for $p_{BB}$ |
@@ -151,7 +142,8 @@ sudo docker container stop <container-id> # stop the container
     |`pkcommverifs -> verifier total time` | $(Q)$ Verifying $n$ PoKs of commitments |
     |`get_verfsigs_rev -> verifier total time`  | $(Q)$ Generating $n$ BBS+ quasi-signatures | 
     |`check_verfsigs_rev -> mixer X total time` | $(M_k)$ Verifying $n$ BBS+ quasi-signatures/encryptions | 
-    |`get_blsigs_rev -> re-encrypt and permute BBS+ signatures -> mixer X total time` | $(M_k)$ Re-encryption+proof-of-shuffle of encrypted sigs |
+    |`get_blsigs_rev -> re-encrypt and permute BBS+ signatures -> reencrypting encrypted BBS+ signatures time` | $(M_k)$ Re-encryption of encrypted signatures |
+    |`get_blsigs_rev -> re-encrypt and permute BBS+ signatures ->` `creating proof of shuffle of encrypted BBS+ signatures time`+`verifying others' proofs of shuffle of encrypted BBS+ signatures time` | $(M_k)$ Proof-of-shuffle of encrypted signatures |
     |`get_blsigs_rev -> generate encrypted blinded BBS+ signatures -> mixer X total time` | $(M_k)$ Homomorphic blinding of encrypted signatures |
     |`get_blsigs_rev -> decryption of blinded BBS+ signatures -> mixer X total time` | $(M_k)$ Threshold decryption of encrypted signatures |
     |`dpk_bbsplussig_nizkproofs -> mixer X total time` | $(M_k)$ Generating $n$ DPK proofs for $p_{BBS+}$ |
@@ -162,15 +154,16 @@ sudo docker container stop <container-id> # stop the container
 
 *Additional notes:*
 
+* In the honest-but-curious (HBC) case, the mix-servers do not need to perform any steps related to verification of signatures, or proving or verifying correctness of shuffles, knowledge of correct blinding factors and correctness of threshold decryption. The reported HBC numbers can be obtained by appropriately skipping these steps from the generated report.
 * We do not report sender costs to create ciphertexts and mixnet costs to check them because these steps do not affect runtime query performance and can be executed as and when individual senders send their data. However, this information is available under the `input preparation` and `checking inputs` sections of the output.
-* We also do not implement distributed key generation during $\mathsf{Keygen}$ because this is a one-time setup step that can be executed by the mix-servers ahead of time and does not affect runtime query performance (see Section 6.1). For the same reason, we do not report preprocessing time, but this information is available under the `preprocessing` section of the output.
-* In our implementation, we run the steps executed by each mix-server sequentially one after the other. Thus, although the total runtime of our experiment incurs the per-mix-server cost 4 times, in a real deployment, most of the bulky steps like proofs of shuffle, homomorphic blinding, threshold decryption, and the DPKs of stage 2 would be executed by each mix-server in parallel and therefore per-mix-server times capture real-world latencies more accurately (see Section 6.1). The only sequential operation is re-encryption, whose time is a miniscule (~0.01) fraction of the time taken in these other steps (see entries `mixing -> mixer X: re-encryption time`, `forward set membership -> mixer X: reencrypting encrypted BB signatures time` and `reverse set membership -> mixer X: reencrypting encrypted BBS+ signatures time`).
+* We also do not implement distributed key generation during $\mathsf{Keygen}$ because this is a one-time setup step that can be executed by the mix-servers ahead of time and does not affect runtime query performance. For the same reason, we do not report preprocessing time, but this information is available under the `preprocessing` section of the output.
+* In our implementation, we run the steps executed by each mix-server sequentially one after the other. Thus, although the total runtime of our experiment incurs the per-mix-server cost 4 times, in a real deployment, most of the bulky steps like proofs of shuffle, homomorphic blinding, threshold decryption, and the DPKs of stage 2 would be executed by each mix-server in parallel and therefore per-mix-server times capture real-world latencies more accurately. The only sequential operation is re-encryption, whose time is a miniscule (~0.01) fraction of the time taken in these other steps (see entries `mixing -> mixer X: re-encryption time`, `forward set membership -> mixer X: reencrypting encrypted BB signatures time` and `reverse set membership -> mixer X: reencrypting encrypted BBS+ signatures time`).
 * Although the verification times in our proofs are more than the very competitive verification times in zkSNARKs (see experiment 2), they are still a miniscule (<0.03) fraction of the zkSNARK prover times and thus our approach still offers drastic savings in overall latencies.
 * We used the [BN254 elliptic curve](https://hackmd.io/@jpw/bn254) in our experiments. Since [recent attacks](https://eprint.iacr.org/2015/1027.pdf) have reduced the security of this curve to around 100-110 bits (as per [this](https://github.com/zcash/zcash/issues/2502) and [this](https://hackmd.io/@jpw/bn254) report), a popular secure alternative [providing an adequate 117-120 bit security is BLS12-381](https://hackmd.io/@benjaminion/bls12-381). However, our chosen [Charm cryptographic library](https://github.com/JHUISI/charm) does not support this curve. Nevertheless, given the extensive performance comparison between BN254 and BLS12-381 done [here](https://hackmd.io/@gnark/eccbench) and given that elliptic curve operations get involved only in our DPKs of stage 2, we expect that the performance impact of switching to BLS12-381 would be within 2x for these DPKs and thus ~1.3x for our overall per-prover times.
 
 #### Experiment 2: Running zkSNARK-based single-prover set membership and reverse set membership proofs
 
-*Experiment description:* The goal of this experiment is to estimate the performance of a set membership and reverse set membership proof using a Merkle accumulator-based zkSNARK. This is a single-prover proof, but the rationale for running this experiment is to indirectly estimate the performance of a collaborative zkSNARK by doubling the prover time in the single-prover zkSNARK. Towards this end, we created a set membership zkSNARK for statement $\rho_{SM-Acc}$ (see Section 1.2.3B) by creating a Merkle tree for the set of plaintexts and a reverse set membership zkSNARK for statement $\rho_{RSM-Acc}$ by creating a Merkle tree for the set of ciphertexts (commitments). The latter requires proving arithmetic relationships about elements in the commitment space, for which we used the Baby Jubjub curve. The hash function for the Merkle tree was chosen as the Poseidon hash function, which is specially optimised for use in zkSNARKs. The experiment runs set membership proof for a single ciphertext against a set of $10000$ plaintexts and reverse set membership proof for a single plaintext against a set of $10000$ ciphertexts. All our zkSNARKs are created using the [ZoKrates toolchain](https://zokrates.github.io/) and the [Groth16 proof system](https://eprint.iacr.org/2016/260).
+*Experiment description:* The goal of this experiment is to estimate the performance of a set membership and reverse set membership proof using a Merkle accumulator-based zkSNARK. This is a single-prover proof, but the rationale for running this experiment is to indirectly estimate the performance of a collaborative zkSNARK by doubling the prover time in the single-prover zkSNARK. Towards this end, we created a set membership zkSNARK for statement $\rho_{SM-Acc}$ (see Section 1.2.4) by creating a Merkle tree for the set of plaintexts and a reverse set membership zkSNARK for statement $\rho_{RSM-Acc}$ by creating a Merkle tree for the set of ciphertexts (commitments). The latter requires proving arithmetic relationships about elements in the commitment space, for which we used the Baby Jubjub curve. The hash function for the Merkle tree was chosen as the Poseidon hash function, which is specially optimised for use in zkSNARKs. The experiment runs set membership proof for a single ciphertext against a set of $10000$ plaintexts and reverse set membership proof for a single plaintext against a set of $10000$ ciphertexts. All our zkSNARKs are created using the [ZoKrates toolchain](https://zokrates.github.io/) and the [Groth16 proof system](https://eprint.iacr.org/2016/260).
 
 *Running the experiment:*
 ```bash
@@ -187,8 +180,8 @@ sudo docker run -it tmpets/zksnark-sm-rsm:v1 /bin/bash # run in the host shell t
 
 *Steps to verify the claimed results:*
 
-1. Verify that the prover time printed against the `user` entry in the `PROVER` section is around 2.17 seconds, both for set membership and reverse set membership. When scaled to proofs for 10000 ciphertexts (for set membership) and 10000 plaintexts (for reverse set membership), this results in a total prover time of 21700 seconds, which match the per-prover time reported in rows 2 and 4 of Figure 11. Such direct scaling is sufficient to estimate the performance for $n$ proofs for these generic proof systems. This verification thus directly supports main results 1 and 2.
-2. Verify that the verifier time printed against the `user` entry in the `VERIFIER` section is around 0.005 seconds, both for set membership and reverse set membership. When scaled to proofs for 10000 ciphertexts/plaintexts, this results in a total verifier time of 50 seconds, which match the verifier times reported in rows 2 and 4 of Figure 11.
+1. Verify that the prover time printed against the `user` entry in the `PROVER` section is around 2.17 seconds, both for set membership and reverse set membership. When scaled to proofs for 10000 ciphertexts (for set membership) and 10000 plaintexts (for reverse set membership), this results in a total prover time of 21700 seconds. Such direct scaling is sufficient to estimate the performance for $n$ proofs for these generic proof systems. Thus, as per [1], the time taken by collaborative zkSNARKs is estimated to be $2*21700=43400$ seconds, which matches the row titled ``collab-zkSNARK-SM''. This verification thus directly supports main results 1 and 2.
+2. Verify that the verifier time printed against the `user` entry in the `VERIFIER` section is around 0.005 seconds, both for set membership and reverse set membership. When scaled to proofs for 10000 ciphertexts/plaintexts, this results in a total verifier time of 50 seconds, which match the verifier times reported in the text of Section 6 - ``Comparison''.
 3. Verify that the string `PASSED` is printed in the `VERIFIER` section, denoting that the proofs actually passed.
 
 *Additional notes:*
@@ -197,7 +190,9 @@ sudo docker run -it tmpets/zksnark-sm-rsm:v1 /bin/bash # run in the host shell t
 
 #### Experiment 3: Running cpSNARK-Set based single-prover set membership proofs
 
-*Experiment description:* The goal of this experiment is to estimate the time taken by Benarroch et al.'s cpSNARK-Set scheme. This scheme is also a single-prover scheme but it only allows proving set membership and not reverse set membership. For this experiment, we use the scheme's [official implementation](https://github.com/kobigurk/cpsnarks-set/tree/f8c7db66b7519b91dcda16caee6cb84949e8911b) that provides a benchmark to estimate the prover and verifier times in a single set membership proof. The scheme is based on RSA accumulators where the prover and verifier times are independent of the size of the set; therefore this benchmark only estimates these times for a dummy set of 3 elements. Additionally, the benchmark only estimates the time taken by the prover to compute the proof *given a membership witness*, but it does not include the time taken to generate such a witness. We, therefore, add an additional benchmark to this implementation to estimate the time taken by the prover to generate a single membership witness for a set of size 10000. 
+*Experiment description:* The goal of this experiment is to estimate the time taken by Benarroch et al.'s cpSNARK-Set scheme. This scheme is also a single-prover scheme but it only allows proving set membership and not reverse set membership. For this experiment, we use the scheme's [official implementation](https://github.com/kobigurk/cpsnarks-set/tree/f8c7db66b7519b91dcda16caee6cb84949e8911b) that provides a benchmark to estimate the prover and verifier times in a single set membership proof. The scheme is based on RSA accumulators where the prover and verifier times are independent of the size of the set; therefore this benchmark only estimates these times for a dummy set of 3 elements. 
+
+Additionally, the benchmark only estimates the time taken by the prover to compute the proof *given a membership witness*, but it does not include the time taken to generate such a witness. We, therefore, add an additional benchmark to this implementation to estimate the time taken by the prover to generate a single membership witness for a set of size 10000. 
 
 *Running the experiment:*
 ```bash
@@ -214,7 +209,7 @@ cargo bench --bench membership_hash # run in the container shell - set membershi
 *Steps to verify the claimed results:*
 
 1. Verify that the mean prover time in section `membership_hash protocol proving` is around 220 ms. This supports main result 1 since the prover time when scaled to 10000 ciphertexts is 2200 s.
-2. Verify that the mean verifier time in section `membership_hash protocol verification` is around 31 ms. When scaled to 10000 ciphertexts, this would be 310 s, which is still higher than our 210 s (row 1 Figure 11) for the distributed case.
+2. Verify that the mean verifier time in section `membership_hash protocol verification` is around 31 ms. When scaled to 10000 ciphertexts, this would be 310 s, which is still higher than our 210 s (row ``DB-SM - $Q$'') for the distributed case.
 3. Verify that the mean prover time in section `membership_hash creating witness` is around 783 ms. This reflects the $O(n)$ witness computation operation in RSA accumulators, where $n$ is the size of the set (see the additional benchmark `membership_hash creating witness` in file `cpsnark-sm/benches/membership_hash.rs`). Although we do not report this, this witness generation time when scaled to 10000 ciphertexts results in an overhead of 7830 s, which combined with the proof generation time in step 1 results in a total prover time of 10030 seconds in comparison to our 500 seconds (a 20x improvement) for the distributed case.
 
 *Additional notes:*
@@ -222,14 +217,6 @@ cargo bench --bench membership_hash # run in the container shell - set membershi
 * We ignore the cost of creating the accumulator and of hashing set values to prime numbers in this approach, since these are one-time costs.
 * We do not run the `membership_prime` benchmark also provided in the official implementation, because this is for the special case when set elements are prime numbers and is not applicable for our general use-case.
 * In addition to the additional benchmark for measuring witness creation time, we also include some minor bugfixes to the official implementation, as detailed in `cpsnark-sm/README.md`.
-
-## Limitations
-
-All the figures and numbers reported in Section 6 of the paper are reproducible with the above benchmarks. However, we are still in the shepherding phase and are in the process of making some requested presentation-related changes in this section, which are not included in the above experiments. These changes mainly entail:
-
-* Adding the benchmarks for multiple values of $n$ and $m$ and for multiple runs in each setting in Figure 11, as opposed to only for $n=10000$ and $m=4$. Note that these benchmarks can already be obtained by running `python db_sm_rsm.py n m` inside the container of experiment 1 with appropriate values of $n$ and $m$.
-* Indicating the time taken in distributed key generation and ciphertext creation by the senders. For distributed key generation, we will cite the numbers reported in [3], which is an efficient MPC protocol for distributed key generation for the threshold Paillier cryptosystem we use. For sender costs, we will include the times reported under sections `input preparation` and `checking inputs` of experiment 1 output. 
-* Adding a discussion on the expected performance tradeoff in switching to BLS12-381 for improved security.
 
 ## References
 
