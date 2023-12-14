@@ -1,6 +1,6 @@
 # Benchmarks for Traceable Mixnets
 
-This repository includes benchmarks for the PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
+This repository includes the source code to reproduce the benchmarks in our PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
 
 - Source code for our implementation of the distributed zero-knowledge proofs (ZKPs) of set membership and reverse set membership (DB-SM and DB-RSM) shown respectively in Figures 8 and 9 of our paper. These ZKPs form the core building blocks of our traceable mixnet construction shown in Figure 7. 
 - Source code for a zkSNARK implementation for set membership and reverse set membership in the single prover setting using Merkle accumulators. This is included to indirectly estimate the time required in producing distributed set membership and reverse set membership proofs via collaborative zkSNARKs [1]. In a collaborative zkSNARK, a set of provers each holding a share of the NP witness jointly prove knowledge of the witness. As per [1], a collaborative zkSNARK incurs a per-prover time that is roughly double the time taken by the corresponding single-prover zkSNARK. This thumbrule allows us to estimate the performance in a collaborative zkSNARK by implementing only a single-prover zkSNARK.
@@ -10,7 +10,7 @@ This repository includes benchmarks for the PETS 2024 paper titled "Traceable mi
 
 ### Hardware Requirements
 
-The benchmarks were conducted on an Intel Xeon W-1270 machine with 3.40 GHz clock speed and 64 GB RAM, on a single core. Performance metrics reported here are specific to this configuration and may vary on different hardware. We recommend replicating these benchmarks on a similar hardware configuration for comparable timings, although the relative performance advantage of our approach over others should remain consistent across different hardware configurations. 
+Our benchmarks were conducted on an Intel Xeon W-1270 machine with 3.40 GHz clock speed and 64 GB RAM, on a single core. Performance metrics reported here are specific to this configuration and may vary on different hardware. We recommend replicating these benchmarks on a similar hardware configuration for comparable timings, although the relative performance advantage of our approach over others should remain consistent across different hardware configurations. 
 
 ### Software Requirements
 
@@ -24,7 +24,7 @@ The expected overall time for all our experiments (experiments 1-3) is about 5 h
 
 ### Accessibility
 
-The git tree contains source code for our DB-SM and DB-RSM proofs under directory `db-sm-rsm`, source code for the zkSNARK-based set membership and reverse set membership proofs under directory `zksnark-sm-rsm`, and source code for the cpSNARK-Set based set membership proof under directory `cpsnark-sm`. In addition, it contains sample reports containing our experiment outputs on our test hardware setup under directory `sample-reports` and Dockerfiles for each of our experiments at the top-level. We use these Dockerfiles to build the following Docker images and publish them on [Docker Hub](https://hub.docker.com/):
+The git tree contains source code for our DB-SM and DB-RSM proofs under directory `db-sm-rsm`, source code for the zkSNARK-based proofs under directory `zksnark-sm-rsm`, and source code for the cpSNARK-Set based set membership proof under directory `cpsnark-sm`. In addition, it contains sample reports containing our experiment outputs on our test hardware setup under directory `sample-reports` and Dockerfiles for each of our experiments at the top-level. We use these Dockerfiles to build the following Docker images and publish them on [Docker Hub](https://hub.docker.com/):
 
 - image `tmpets/db-sm-rsm:v1` for experiment 1 (running our DB-SM and DB-RSM proofs) 
 - image `tmpets/zksnark-sm-rsm:v1` for experiment 2 (running single-prover set membership and reverse set membership proofs using Merkle tree based zkSNARKs) 
@@ -44,7 +44,7 @@ sudo docker pull tmpets/cpsnark-sm:v1
 
 ### Manual set up on the host environment (without Docker)
 
-If you want to install the benchmarks on your local system without Docker, we also provide install scripts for Ubuntu. Each of `db-sm-rsm`, `zksnark-sm-rsm` and `cpsnark-sm` directories contain an `install.sh` script that sets up the dependencies for you. 
+If you want to install the benchmarks on your host environment without using Docker, we also provide install scripts for Ubuntu. Each of `db-sm-rsm`, `zksnark-sm-rsm` and `cpsnark-sm` directories contain an `install.sh` script that sets up the dependencies for you. 
 
 #### Setting up `db-sm-rsm`
 
