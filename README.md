@@ -48,14 +48,14 @@ If you want to install the benchmarks on your local system without Docker, we al
 
 #### Setting up `db-sm-rsm`
 
-Ensure that you have `python3.7` installed on your system and it is in the path. Verify the contents of the `db-sm-rsm/install.sh` file. The script installs GMP, PBC, OpenSSL and Charm libraries to `\usr\local\lib`. Modify as per your host system setup and run:
+Ensure that you have `python3.7` installed on your system and it is in the path. Verify the contents of the `db-sm-rsm/install.sh` file. The script installs GMP, PBC, OpenSSL and Charm libraries to `/usr/local/lib`. Modify as per your host system setup and run:
 
 ```bash
 cd db-sm-rsm
 ./install.sh
 ```
 
-After installation, place the following commands in an appropriate `.bashrc` file to ensure that the environment variables defined therein are available whenever the `db-sm-rsm` benchmarks are run:
+After installation, place the following commands in an appropriate `.bashrc` file to ensure that the environment variables defined below are available whenever the `db-sm-rsm` benchmarks are run:
 
 ```bash
 export LIBRARY_PATH=/usr/local/lib
