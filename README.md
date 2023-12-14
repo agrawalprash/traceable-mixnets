@@ -106,7 +106,7 @@ sudo docker run -it tmpets/db-sm-rsm:v1 /bin/bash # run in the host shell to lau
 precomputing=0 python db_sm_rsm.py 10 2 # run in the container shell
 # (type `exit` or `Ctrl+D` to exit out of the container shell)
 ```
-Note: In case of a manual install on the host system, simply execute `precomputing=0 python db_sm_rsm.py 10 2` from the `db-sm-rsm` directory.
+Note: In case of a manual install on the host system, simply execute `precomputing=0 python3.7 db_sm_rsm.py 10 2` from the `db-sm-rsm` directory.
 
 The expected outcome is an output detailing the verification status and time taken by various steps of the proofs, such that all `status_*` entries are `True`.
 
@@ -134,7 +134,7 @@ The expected outcome is an output containing strings like `Finished bench [optim
 
 ## Artifact Evaluation
 
-We now provide instructions to reproduce the results mentioned in the paper. Our instructions and reported numbers are specifically for the case of $n=10^$ ciphertexts in the mixnet input list and $m=4$ mix-servers (see Figure 10 - column for $m=4$ and $n=10^4$ in the top table and detailed breakdown in the bottom table). Values for other settings can be similarly obtained. 
+We now provide instructions to reproduce the results mentioned in the paper. Our instructions and reported numbers are specifically for the case of $n=10^4$ ciphertexts in the mixnet input list and $m=4$ mix-servers (see Figure 10 - column for $m=4$ and $n=10^4$ in the top table and detailed breakdown in the bottom table). Values for other settings can be similarly obtained. 
 
 ### Main Results and Claims
 
@@ -159,6 +159,7 @@ The per-prover time in our distributed reverse set membership proof for $10000$ 
 sudo docker run -it tmpets/db-sm-rsm:v1 /bin/bash # run in the host shell to launch a container shell
 python db_sm_rsm.py 10000 4 # run in the container shell
 ```
+Note: In case of a manual install on the host system, simply execute `python3.7 db_sm_rsm.py 10000 4` from the `db-sm-rsm` directory.
 
 Since the above command is a long-running one, it may be desirable to run it in background and fetch the results later. This can be done by running the following commands on the host shell:
 ```bash
@@ -229,6 +230,7 @@ sudo docker run -it tmpets/zksnark-sm-rsm:v1 /bin/bash # run in the host shell t
 ./run.sh sm 10000 poseidon # run in the container shell - set membership proof
 ./run.sh rsm 10000 poseidon # run in the container shell - reverse set membership proof
 ```
+Note: In case of a manual install on the host system, simply execute `./run.sh sm 10000 poseidon` and `./run.sh rsm 10000 poseidon` from the `zksnark-sm-rsm` directory.
 
 *Expected duration:* ~1 minute for each of the two proofs
 
@@ -257,6 +259,7 @@ Additionally, the benchmark only estimates the time taken by the prover to compu
 sudo docker run -it tmpets/cpsnark-sm:v1 /bin/bash # run in the host shell to launch a container shell
 cargo bench --bench membership_hash # run in the container shell - set membership proof
 ```
+Note: In case of a manual install on the host system, simply execute `cargo bench --bench membership_hash` from the `cpsnark-sm` directory.
 
 *Expected duration:* ~2-3 minutes
 
