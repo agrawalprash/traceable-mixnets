@@ -27,12 +27,12 @@ The expected overall time for all our experiments (experiments 1-3) is about 5 h
 The git tree contains source code for our DB-SM and DB-RSM proofs under directory `db-sm-rsm`, source code for the zkSNARK-based set membership and reverse set membership proofs under directory `zksnark-sm-rsm`, and source code for the cpSNARK-Set based set membership proof under directory `cpsnark-sm`. In addition, it contains sample reports containing our experiment outputs on our test hardware setup under directory `sample-reports` and Dockerfiles for each of our experiments at the top-level. We use these Dockerfiles to build the following Docker images and publish them on [Docker Hub](https://hub.docker.com/):
 
 - image `tmpets/db-sm-rsm:v1` for experiment 1 (running our DB-SM and DB-RSM proofs) 
-- image `tmpets/zksnark-sm:v1` for experiment 2 (running single-prover set membership and reverse set membership proofs using Merkle tree based zkSNARKs) 
+- image `tmpets/zksnark-sm-rsm:v1` for experiment 2 (running single-prover set membership and reverse set membership proofs using Merkle tree based zkSNARKs) 
 - image `tmpets/cpsnark-sm:v1` for experiment 3 (running single-prover set membership proof based on Benarroch et al.'s cpSNARK-Set approach). 
 
 *Structure of Docker images:* The `tmpets/db-sm-rsm:v1` image is built from the `Dockerfile_db_sm_rsm` file. It contains a copy of the source code directory `db-sm-rsm` at location `/app/db-sm-rsm` inside the image, which is the default working directory from which container commands are executed. Similar structure is followed for images `tmpets/zksnark-sm-rsm:v1` and `tmpets/cpsnark-sm:v1` too.
 
-### Set up the environment
+### Set up the environment via Docker (recommended)
 
 Set up simply requires pulling our Docker images from Docker Hub. If you are behind a proxy server, this would require [additional proxy configuration](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy) for the Docker daemon. The expected correct output for this step is the standard Docker output showing various layers of the Docker images being fetched. Once these images are pulled, no additional content needs to be downloaded. 
 
@@ -40,6 +40,58 @@ Set up simply requires pulling our Docker images from Docker Hub. If you are beh
 sudo docker pull tmpets/db-sm-rsm:v1  
 sudo docker pull tmpets/zksnark-sm-rsm:v1
 sudo docker pull tmpets/cpsnark-sm:v1
+```
+
+### Manual set up on the host environment (without Docker)
+
+If you want to install the benchmarks on your local system without Docker, we also provide install scripts for Ubuntu. Each of `db-sm-rsm`, `zksnark-sm-rsm` and `cpsnark-sm` directories contain an `install.sh` script that sets up the dependencies for you. 
+
+#### Setting up `db-sm-rsm`
+
+Ensure that you have `python3.7` installed on your system and it is in the path. Verify the contents of the `db-sm-rsm/install.sh` file. The script installs GMP, PBC, OpenSSL and Charm libraries to `\usr\local\lib`. Modify as per your host system setup and run:
+
+```bash
+cd db-sm-rsm
+./install.sh
+```
+
+After installation, place the following commands in an appropriate `.bashrc` file to ensure that the environment variables defined therein are available whenever the `db-sm-rsm` benchmarks are run:
+
+```bash
+export LIBRARY_PATH=/usr/local/lib
+export LD_LIBRARY_PATH=/usr/local/lib
+export LIBRARY_INCLUDE_PATH=/usr/local/include
+```
+
+#### Setting up `zksnark-sm-rsm`
+
+Ensure that you have `python3.7` installed on your system and it is in the path. Verify the contents of the `zksnark-sm-rsm/install.sh` file. The script installs ZoKrates. Modify as per your host system setup and run:
+
+```bash
+cd zksnark-sm-rsm
+./install.sh
+```
+
+After installation, place the following commands in an appropriate `.bashrc` file to ensure that the PATH environment variable is updated to include the PATH to the ZoKrates installation directory.
+
+```bash
+export PATH="${HOME}/.zokrates/bin:${PATH}"
+```
+
+#### Setting up `cpsnark-sm`
+
+Verify the contents of the `cpsnark-sm/install.sh` file. The script installs Rust and other dependencies for the Bennarroch et al. scheme. Modify as per your host system setup and run:
+
+```bash
+cd cpsnark-sm
+./install.sh
+```
+
+After installation, place the following commands in an appropriate `.bashrc` file to ensure that the PATH environment variable is updated to include the PATH to the Rust build tool `cargo`.
+
+```bash
+source "$HOME/.cargo/env"
+export PATH="${HOME}/.cargo/bin:${PATH}"
 ```
 
 ### Testing the Environment
@@ -54,6 +106,8 @@ sudo docker run -it tmpets/db-sm-rsm:v1 /bin/bash # run in the host shell to lau
 precomputing=0 python db_sm_rsm.py 10 2 # run in the container shell
 # (type `exit` or `Ctrl+D` to exit out of the container shell)
 ```
+Note: In case of a manual install on the host system, simply execute `precomputing=0 python db_sm_rsm.py 10 2` from the `db-sm-rsm` directory.
+
 The expected outcome is an output detailing the verification status and time taken by various steps of the proofs, such that all `status_*` entries are `True`.
 
 #### Test experiment 2
@@ -63,6 +117,8 @@ Test a basic single-prover set membership zkSNARK where the set size is 10 and t
 sudo docker run -it tmpets/zksnark-sm-rsm:v1 /bin/bash # run in the host shell to launch a container shell
 ./run.sh sm 10 poseidon # run in the container shell
 ```
+Note: In case of a manual install on the host system, simply execute `./run.sh sm 10 poseidon` from the `zksnark-sm-rsm` directory.
+
 The expected outcome is an output containing a string `PASSED` under section `VERIFIER`.
 
 #### Test experiment 3
@@ -72,6 +128,8 @@ Test whether the dependencies for experiment 3 are ready for use:
 sudo docker run -it tmpets/cpsnark-sm:v1 /bin/bash # run in the host shell to launch a container shell
 cargo bench --no-run --bench membership_hash # run in the container shell
 ```
+Note: In case of a manual install on the host system, simply execute `cargo bench --no-run --bench membership_hash` from the `cpsnark-sm` directory.
+
 The expected outcome is an output containing strings like `Finished bench [optimized] target(s) in 0.06s` and `Executable benches/membership_hash.rs (target/release/deps/membership_hash-3a2eac78eb554c7e)`.
 
 ## Artifact Evaluation
