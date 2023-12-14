@@ -132,7 +132,7 @@ Note: In case of a manual install on the host system, simply execute `cargo benc
 
 The expected outcome is an output containing strings like `Finished bench [optimized] target(s) in 0.06s` and `Executable benches/membership_hash.rs (target/release/deps/membership_hash-3a2eac78eb554c7e)`.
 
-## Artifact Evaluation
+## Evaluation
 
 We now provide instructions to reproduce the results mentioned in the paper. Our instructions and reported numbers are specifically for the case of $n=10^4$ ciphertexts in the mixnet input list and $m=4$ mix-servers (see Figure 10 - column for $m=4$ and $n=10^4$ in the top table and detailed breakdown in the bottom table). Values for other settings can be similarly obtained. 
 
