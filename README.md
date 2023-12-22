@@ -1,5 +1,20 @@
 # Benchmarks for Traceable Mixnets
 
+**Table of Contents**
+- [Basic Requirements](#basic-requirements)
+    - [Hardware Requirements](#hardware-requirements)
+    - [Software Requirements](#software-requirements)
+    - [Estimated Time and Storage Consumption](#estimated-time-and-storage-consumption)
+- [Environment](#environment)
+    - [Accessibility](#accessibility)
+    - [Setup via Docker (Recommended)](#setup-via-docker-recommended)
+    - [Manual Setup on Host Machine (Without Docker)](#manual-setup-on-host-machine-without-docker)
+    - [Testing the Environment](#testing-the-environment)
+- [Evaluation](#evaluation)
+    - [Main Results and Claims](#main-results-and-claims)
+    - [Experiments](#experiments)
+- [References](#references)
+
 This repository includes the source code to reproduce the benchmarks in our PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
 
 - Source code for our implementation of the distributed zero-knowledge proofs (ZKPs) of set membership and reverse set membership (DB-SM and DB-RSM) shown respectively in Figures 8 and 9 of our paper. These ZKPs form the core building blocks of our traceable mixnet construction shown in Figure 7. 
@@ -32,7 +47,7 @@ The git tree contains source code for our DB-SM and DB-RSM proofs under director
 
 *Structure of Docker images:* The `tmpets/db-sm-rsm:v1` image is built from the `Dockerfile_db_sm_rsm` file. It contains a copy of the source code directory `db-sm-rsm` at location `/app/db-sm-rsm` inside the image, which is the default working directory from which container commands are executed. Similar structure is followed for images `tmpets/zksnark-sm-rsm:v1` and `tmpets/cpsnark-sm:v1` too.
 
-### Set up the environment via Docker (recommended)
+### Setup via Docker (Recommended)
 
 Set up simply requires pulling our Docker images from Docker Hub. If you are behind a proxy server, this would require [additional proxy configuration](https://docs.docker.com/config/daemon/systemd/#httphttps-proxy) for the Docker daemon. The expected correct output for this step is the standard Docker output showing various layers of the Docker images being fetched. Once these images are pulled, no additional content needs to be downloaded. 
 
@@ -42,7 +57,7 @@ sudo docker pull tmpets/zksnark-sm-rsm:v1
 sudo docker pull tmpets/cpsnark-sm:v1
 ```
 
-### Manual set up on the host environment (without Docker)
+### Manual Setup on Host Machine (Without Docker)
 
 If you want to install the benchmarks on your host environment without using Docker, we also provide install scripts for Ubuntu. Each of `db-sm-rsm`, `zksnark-sm-rsm` and `cpsnark-sm` directories contain an `install.sh` script that sets up the dependencies for you. 
 
