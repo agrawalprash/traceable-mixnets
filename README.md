@@ -13,6 +13,9 @@
 - [Evaluation](#evaluation)
     - [Main Results and Claims](#main-results-and-claims)
     - [Experiments](#experiments)
+        - [Experiment 1: Running our DB-SM and DB-RSM proofs](#experiment-1-running-our-db-sm-and-db-rsm-proofs)
+        - [Experiment 2: Running zkSNARK-based single-prover set membership and reverse set membership proofs](#experiment-2-running-zksnark-based-single-prover-set-membership-and-reverse-set-membership-proofs)
+        - [Experiment 3: Running cpSNARK-Set based single-prover set membership proofs](#experiment-3-running-cpsnark-set-based-single-prover-set-membership-proofs)
 - [References](#references)
 
 This repository includes the source code to reproduce the benchmarks in our PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
