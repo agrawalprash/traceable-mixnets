@@ -18,7 +18,7 @@
         - [Experiment 3: Running cpSNARK-Set based single-prover set membership proofs](#experiment-3-running-cpsnark-set-based-single-prover-set-membership-proofs)
 - [References](#references)
 
-This repository includes the source code to reproduce the benchmarks in our PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee. Specifically, it contains the following items: 
+This repository includes benchmarks for the PETS 2024 paper titled "Traceable mixnets" by Prashant Agrawal, Abhinav Nakarmi, Mahabir Prasad Jhanwar, Subodh Sharma and Subhashis Banerjee (link to archive version [here](https://eprint.iacr.org/2023/1942)). Specifically, it contains the following items: 
 
 - Source code for our implementation of the distributed zero-knowledge proofs (ZKPs) of set membership and reverse set membership (DB-SM and DB-RSM) shown respectively in Figures 8 and 9 of our paper. These ZKPs form the core building blocks of our traceable mixnet construction shown in Figure 7. 
 - Source code for a zkSNARK implementation for set membership and reverse set membership in the single prover setting using Merkle accumulators. This is included to indirectly estimate the time required in producing distributed set membership and reverse set membership proofs via collaborative zkSNARKs [1]. In a collaborative zkSNARK, a set of provers each holding a share of the NP witness jointly prove knowledge of the witness. As per [1], a collaborative zkSNARK incurs a per-prover time that is roughly double the time taken by the corresponding single-prover zkSNARK. This thumbrule allows us to estimate the performance in a collaborative zkSNARK by implementing only a single-prover zkSNARK.
